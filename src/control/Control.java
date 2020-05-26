@@ -22,7 +22,11 @@ public class Control {
 	}
 	
 	public void mouseClicked() {
-		this.logica.clickTutorial();
+		this.logica.click();
+	}
+	
+	public void pantallaMenu() {
+		this.logica.pantallaMenu();
 	}
 	
 
