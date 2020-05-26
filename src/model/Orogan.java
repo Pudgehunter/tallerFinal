@@ -4,10 +4,9 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 public class Orogan extends Pokemon{
-	PImage pokeImagen;
-	public Orogan(int posX, int posY,int nivel,PApplet app) {
-		super(posX,posY,nivel,app);
-		this.pokeImagen = app.loadImage("./images/OroganAtras.png");
+	public Orogan(PImage pokeImagen,int posX, int posY,int nivel,PApplet app) {
+		super(pokeImagen,posX,posY,nivel,app);
+		this.nombres = "Orogan";
 	}
 	
 	public void drawPokemon() {

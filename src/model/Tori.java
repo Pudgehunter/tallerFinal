@@ -4,10 +4,9 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 public class Tori extends Pokemon{
-	PImage pokeImagen;
-	public Tori(int posX, int posY,int nivel,PApplet app) {
-		super(posX,posY,nivel,app);
-		this.pokeImagen = app.loadImage("./images/ToriAtras.png");
+	public Tori(PImage pokeImagen,int posX, int posY,int nivel,PApplet app) {
+		super(pokeImagen,posX,posY,nivel,app);
+		this.nombres = "Tori";
 	}
 	
 	public void drawPokemon() {

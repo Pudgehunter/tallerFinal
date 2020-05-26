@@ -27,6 +27,8 @@ public class Logic {
 	
 	//Mi cerebro no funciono para un Linkedlist
 	LinkedList<Pokemon> listpokemon;
+	LinkedList<Pokemon> enemigos;
+	LinkedList<Pokemon> listRival;
 	
 	//Todas las imagenes
 	PImage myRedPanda,myMiffy,myLeafabbit,
@@ -50,14 +52,15 @@ public class Logic {
 		setupLogic();
 		createMap();
 		listpokemon = new LinkedList<Pokemon>();
+		enemigos = new LinkedList<Pokemon>();
+		listRival = new LinkedList<Pokemon>();
 	}
 	public void setupLogic() {
 		pImagePokemones();
 		pantalla = 0;
 		pantallaJuego = 0;
 		pantallaMenu = 0;
-		choosePokemon = 0;
-		
+		choosePokemon = 0;	
 	}
 	
 	public void createMap() {
@@ -222,6 +225,7 @@ public class Logic {
 			case 0:
 				System.out.println("te salio un enemigo, valiste verga");
 				pantallaJuego = 1;
+				validarRandomEnemigos();
 				break;
 			default:
 				System.out.println("te salvaste!");
@@ -230,33 +234,86 @@ public class Logic {
 		}
 	}
 	
-	public void batallaDibujarPokemon() {
-		for (int i = 0; i < listpokemon.size(); i++) {
-			listpokemon.get(i).drawPokemon();
+	public void validarRandomEnemigos() {
+		if(pantallaJuego == 1) {
+			int enemyRandom = (int) app.random(0,3);
+			switch(enemyRandom) {
+			case 0:
+				enemigos.add(new Orogan(enemyOrogan,500,25,2,app));
+				for (int i = 0; i < enemigos.size(); i++) {
+					enemigos.get(i).nivelAliado(enemigos);
+				}
+				break;
+			case 1:
+				enemigos.add(new Tori(enemyTori,500,25,2,app));
+				for (int i = 0; i < enemigos.size(); i++) {
+					enemigos.get(i).nivelAliado(enemigos);
+				}
+				break;
+			case 2:
+				enemigos.add(new Sealmon(enemySealmon,500,25,2,app));
+				for (int i = 0; i < enemigos.size(); i++) {
+					enemigos.get(i).nivelAliado(enemigos);
+				}
+				break;
+			default:
+				enemigos.add(new Sealmon(enemySealmon,500,25,2,app));
+				for (int i = 0; i < listpokemon.size(); i++) {
+					listpokemon.get(i).nivelAliado(listpokemon);
+				}
+				break;
+			}
+			System.out.println(enemigos);
+			System.out.println(enemigos.size());
 		}
 	}
 	
 	public void batallaPokemon() {
-		//Cliquear los atacar, items y correr
-		batallaDibujarPokemon();
-	}
-	
-	
-	public void visualizarPokemones() {
-		if(choosePokemon == 1) {
-			//this.pokemon.add(new RedPanda(myRedPanda,20,400,5,app));
+		for (int i = 0; i < listpokemon.size(); i++) {
+			listpokemon.get(i).drawPokemon();
+			app.fill(0);
+			app.textSize(20);
+			app.text(this.listpokemon.get(i).getNombres(),54,350);
+			app.text("vida: "+this.listpokemon.get(i).getVidaPokemon(),400,400);
+			app.text("Exp: "+this.listpokemon.get(i).getExp(),400,460);
 		}
-		if(choosePokemon == 2) {
-			//this.pokemon.add(new Miffy(myMiffy,20,400,5,app));
+		for (int i = 0; i < enemigos.size(); i++) {
+			enemigos.get(i).drawPokemon();
+			app.text(this.enemigos.get(i).getNombres(),504,350);
+			app.text("vida: "+this.enemigos.get(i).getVidaPokemon(),54,100);
+			if(this.enemigos.get(i).getVidaPokemon() <= 0) {
+				this.enemigos.remove();
+				int recuperarVida = this.listpokemon.get(i).getVidaPokemon();
+				int recuperarTotalVida = recuperarVida;
+				recuperarTotalVida = this.listpokemon.get(i).getVidaTotal();
+				return;
+			}
 		}
-		if(choosePokemon == 3) {
-			//this.pokemon.add(new Leafabbit(myLeafabbit,20,400,5,app));
-		}
+		app.text("Atacar",600,400);
+		app.text("Atrapar",600,450);
+		app.text("Huir",600,500);
+		
 	}
 	
 	public void clickBatalla() {
-		if(app.mouseX > 800/2 && app.mouseX < 800/2 + 60 && app.mouseY > 400 && app.mouseY < 410) {
+		for (int i = 0; i < listpokemon.size(); i++) {
+			for (int j = 0; j < enemigos.size(); j++) {
+				//Atacar
+				if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 380 && app.mouseY < 400) {
+					System.out.println("velocidad Aliado: " + listpokemon.get(i).getVelocidadPokemon());
+					System.out.println("velocidad Enemigo: " + enemigos.get(j).getVelocidadPokemon());
+					System.out.println("vida Enemiga: " + this.enemigos.get(i).getVidaPokemon());
+					this.listpokemon.get(i).atacar(listpokemon, enemigos);
+				}
+				//Atrapar
+				if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 380 && app.mouseY < 400) {
+					
+				}
+				//Huir
+				if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 380 && app.mouseY < 400) {
 			
+				}
+			}
 		}
 	}
 	
@@ -272,12 +329,12 @@ public class Logic {
 		//Case 1 es la pantalla de Inicio, donde sale los personajes.
 		case 1:
 			pantallaEscoger();
-//			System.out.println(app.mouseX);
-//			System.out.println(app.mouseY);
 			break;
 		//Case 2 es la pantalla de Juego, solo creare un mapa.
 		case 2:
 			pantallaJuego();
+//			System.out.println(app.mouseX);
+//			System.out.println(app.mouseY);
 			break;
 		}
 	}
@@ -387,19 +444,28 @@ public class Logic {
 		case 1:
 			if(choosePokemon == 0) {
 				if(app.mouseX > 88 && app.mouseX < 288 && app.mouseY > 170 && app.mouseY < 503) {
-					listpokemon.add(new RedPanda(25,375,5,app));
+					listpokemon.add(new RedPanda(myRedPanda,25,375,5,app));
 					System.out.println(listpokemon);
+					for (int i = 0; i < listpokemon.size(); i++) {
+						listpokemon.get(i).nivelAliado(listpokemon);
+					}
 					choosePokemon = 1;
 					
 				}
 				if(app.mouseX > 297 && app.mouseX < 496 && app.mouseY > 170 && app.mouseY < 503) {
-					listpokemon.add(new Miffy(25,375,5,app));
+					listpokemon.add(new Miffy(myMiffy,25,375,5,app));
 					System.out.println(listpokemon);
+					for (int i = 0; i < listpokemon.size(); i++) {
+						listpokemon.get(i).nivelAliado(listpokemon);
+					}
 					choosePokemon = 2;
 				}
 				if(app.mouseX > 511 && app.mouseX < 710 && app.mouseY > 170 && app.mouseY < 503) {
-					listpokemon.add(new Leafabbit(25,375,5,app));
+					listpokemon.add(new Leafabbit(myLeafabbit,25,375,5,app));
 					System.out.println(listpokemon);
+					for (int i = 0; i < listpokemon.size(); i++) {
+						listpokemon.get(i).nivelAliado(listpokemon);
+					}
 					choosePokemon = 3;
 				}
 			}else {
@@ -408,6 +474,16 @@ public class Logic {
 				}
 			}
 		break;
+		case 2:
+			switch(pantallaJuego) {
+			case 0:
+				break;
+			case 1:
+				clickBatalla();
+				break;
+			}
+			break;
+			
 			}
 	}
 	
