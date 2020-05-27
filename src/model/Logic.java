@@ -60,6 +60,7 @@ public class Logic {
 	//Cargar musicas 
 	SoundFile battle;
 	SoundFile menu;
+	SoundFile victory;
 	
 	//La lista de pokemon
 	private int rivalPokemon;
@@ -122,6 +123,7 @@ public class Logic {
 	public void loadSonido() {
 		battle = new SoundFile(app,"./musica/battle.mp3");
 		menu = new SoundFile(app,"./musica/menu.mp3");
+		victory = new SoundFile(app,"./musica/victory.mp3");
 	}
 	
 	public void registroControl() {
@@ -222,6 +224,7 @@ public class Logic {
 		&& this.protagonista.getmY() == 10) {
 			if(app.keyCode == 'a' || app.keyCode == 'A') {
 				pantallaJuego = 2;
+				battle.play();
 				menu.stop();
 				validarExp();
 				System.out.println(listRival.size());
@@ -459,6 +462,7 @@ public class Logic {
 			if(this.listRival.get(0).getVidaPokemon() <= 0) {
 				if(listRival.size() == 1 && this.listRival.get(0).getVidaPokemon() <= 0) {
 					pantalla = 5;
+					victory.play();
 					battle.stop();
 					new Thread(listpokemon.get(0)).stop();
 					new Thread(listRival.get(j)).stop();
