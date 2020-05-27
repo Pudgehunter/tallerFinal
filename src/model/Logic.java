@@ -10,6 +10,7 @@ import excepciones.exceptions;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
+import processing.sound.SoundFile;
 
 public class Logic {
 	
@@ -55,6 +56,9 @@ public class Logic {
 	introducciones,pokedex,win;
 	
 	PImage[] pokeCambio;
+	
+	//Cargar musicas 
+	SoundFile battle;
 	
 	//La lista de pokemon
 	private int rivalPokemon;
@@ -102,6 +106,9 @@ public class Logic {
 		choosePokemon = 0;
 		rivalPokemon = 0;
 		enemyRandom = 0;
+		
+		//LoadSoundFiles
+		battle = new SoundFile(app,"./musica/battle.mp3");
 		
 		//Booleans
 		atrapar = false;
@@ -282,6 +289,8 @@ public class Logic {
 			case 0:
 				System.out.println("te salio un enemigo, valiste verga");
 				pantallaJuego = 1;
+				battle.amp((float) 0.5);
+				battle.play();
 				validarExp();
 				validarRandomEnemigos();
 				System.out.println(listRival.size());
@@ -360,6 +369,7 @@ public class Logic {
 				pantalla = 4;
 				this.listpokemon.removeAll(this.listpokemon);
 				this.enemigos.remove();
+				battle.stop();
 				return;
 		}
 		for (int i = 0; i < enemigos.size(); i++) {
@@ -384,6 +394,7 @@ public class Logic {
 				new Thread(listpokemon.get(0)).stop();
 				new Thread(listRival.get(0)).stop();
 				pantallaJuego = 0;
+				battle.stop();
 				System.out.println(enemigos.size());
 				System.out.println(listRival.size());
 				return;
@@ -418,6 +429,7 @@ public class Logic {
 				for (int i = 0; i < listpokemon.size(); i++) {
 					if(this.listpokemon.get(0).getVidaPokemon() <= 0 && listpokemon.get(i).getVidaPokemon() <= 0) {
 						pantalla = 4;
+						battle.stop();
 						new Thread(listpokemon.get(0)).stop();
 						new Thread(listRival.get(0)).stop();
 						this.listpokemon.removeAll(listpokemon);
@@ -437,6 +449,7 @@ public class Logic {
 			if(this.listRival.get(0).getVidaPokemon() <= 0) {
 				if(listRival.size() == 1 && this.listRival.get(0).getVidaPokemon() <= 0) {
 					pantalla = 5;
+					battle.stop();
 					new Thread(listpokemon.get(0)).stop();
 					new Thread(listRival.get(j)).stop();
 					return;
@@ -998,6 +1011,7 @@ public class Logic {
 		this.win = app.loadImage("./images/win.jpg");
 		this.pokedex = app.loadImage("./images/pokedex.jpg");
 		this.introducciones = app.loadImage("./images/Introducciones.jpg");
+
 	
 	}
 }
