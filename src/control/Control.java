@@ -29,5 +29,9 @@ public class Control {
 		this.logica.pantallaMenu();
 	}
 	
+	public void sortList(char c) {
+		this.logica.sortList(c);
+	}
+	
 
 }
