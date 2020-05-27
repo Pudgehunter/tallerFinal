@@ -315,28 +315,29 @@ public class Logic {
 	public void validarRandomEnemigos() {
 		if(pantallaJuego == 1) {
 			int dinamico = (int) app.random(0,3);
+			int nivelDinamico = (int) app.random(1,4);
 			enemyRandom = dinamico;
 			switch(enemyRandom) {
 			case 0:
-				enemigos.add(new Orogan(enemyOrogan,500,25,2,app));
+				enemigos.add(new Orogan(enemyOrogan,500,25,nivelDinamico,app));
 				for (int i = 0; i < enemigos.size(); i++) {
 					enemigos.get(i).nivelAliado(enemigos);
 				}
 				break;
 			case 1:
-				enemigos.add(new Tori(enemyTori,500,25,2,app));
+				enemigos.add(new Tori(enemyTori,500,25,nivelDinamico,app));
 				for (int i = 0; i < enemigos.size(); i++) {
 					enemigos.get(i).nivelAliado(enemigos);
 				}
 				break;
 			case 2:
-				enemigos.add(new Sealmon(enemySealmon,500,25,2,app));
+				enemigos.add(new Sealmon(enemySealmon,500,25,nivelDinamico,app));
 				for (int i = 0; i < enemigos.size(); i++) {
 					enemigos.get(i).nivelAliado(enemigos);
 				}
 				break;
 			default:
-				enemigos.add(new Sealmon(enemySealmon,500,25,2,app));
+				enemigos.add(new Sealmon(enemySealmon,500,25,nivelDinamico,app));
 				for (int i = 0; i < enemigos.size(); i++) {
 					enemigos.get(i).nivelAliado(enemigos);
 				}
