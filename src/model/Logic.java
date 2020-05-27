@@ -59,6 +59,7 @@ public class Logic {
 	
 	//Cargar musicas 
 	SoundFile battle;
+	SoundFile menu;
 	
 	//La lista de pokemon
 	private int rivalPokemon;
@@ -108,7 +109,7 @@ public class Logic {
 		enemyRandom = 0;
 		
 		//LoadSoundFiles
-		battle = new SoundFile(app,"./musica/battle.mp3");
+		loadSonido();
 		
 		//Booleans
 		atrapar = false;
@@ -117,6 +118,10 @@ public class Logic {
 		pokeCambio = new PImage[6];
 		comparePokemon = new ComparePokemon();
 		
+	}
+	public void loadSonido() {
+		battle = new SoundFile(app,"./musica/battle.mp3");
+		menu = new SoundFile(app,"./musica/menu.mp3");
 	}
 	
 	public void registroControl() {
@@ -217,6 +222,7 @@ public class Logic {
 		&& this.protagonista.getmY() == 10) {
 			if(app.keyCode == 'a' || app.keyCode == 'A') {
 				pantallaJuego = 2;
+				menu.stop();
 				validarExp();
 				System.out.println(listRival.size());
 			}
@@ -291,6 +297,7 @@ public class Logic {
 				pantallaJuego = 1;
 				battle.amp((float) 0.5);
 				battle.play();
+				menu.stop();
 				validarExp();
 				validarRandomEnemigos();
 				System.out.println(listRival.size());
@@ -369,6 +376,7 @@ public class Logic {
 				pantalla = 4;
 				this.listpokemon.removeAll(this.listpokemon);
 				this.enemigos.remove();
+				menu.stop();
 				battle.stop();
 				return;
 		}
@@ -395,6 +403,7 @@ public class Logic {
 				new Thread(listRival.get(0)).stop();
 				pantallaJuego = 0;
 				battle.stop();
+				menu.play();
 				System.out.println(enemigos.size());
 				System.out.println(listRival.size());
 				return;
@@ -430,6 +439,7 @@ public class Logic {
 					if(this.listpokemon.get(0).getVidaPokemon() <= 0 && listpokemon.get(i).getVidaPokemon() <= 0) {
 						pantalla = 4;
 						battle.stop();
+						menu.stop();
 						new Thread(listpokemon.get(0)).stop();
 						new Thread(listRival.get(0)).stop();
 						this.listpokemon.removeAll(listpokemon);
@@ -481,6 +491,8 @@ public class Logic {
 					//Atrapar
 					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 433 && app.mouseY < 470) {
 						capturarPokemon();
+						menu.play();
+						battle.stop();
 						}
 					//Huir
 					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 482 && app.mouseY < 520) {
@@ -488,6 +500,8 @@ public class Logic {
 						int recuperarVida = this.listpokemon.get(0).getVidaTotal();
 						this.listpokemon.get(0).setVidaPokemon(recuperarVida);
 						pantallaJuego = 0;
+						menu.play();
+						battle.stop();
 						}
 					break;
 					
@@ -646,7 +660,6 @@ public class Logic {
 			app.image(leafabbitSelect,0,0);
 			break;
 		}
-		
 	}
 	
 	public void pantallaJuego() {
@@ -890,6 +903,7 @@ public class Logic {
 					pokemonesRivales();
 					//validarPokedex();
 					this.pantalla = 2;
+					menu.play();
 					this.pantallaJuego = 5;
 				}
 			}
