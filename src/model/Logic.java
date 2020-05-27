@@ -51,7 +51,8 @@ public class Logic {
 	pokemonSelectivo,rojoSelect,greenSelect,blueSelect,
 	redpandaSelect,redPandaClick,
 	miffySelect,miffyClick,
-	leafabbitSelect,leafabbitClick;
+	leafabbitSelect,leafabbitClick,
+	introducciones,pokedex,win;
 	
 	PImage[] pokeCambio;
 	
@@ -343,8 +344,8 @@ public class Logic {
 		for (int i = 0; i < listpokemon.size(); i++) {
 			listpokemon.get(i).setPosX(25);
 			listpokemon.get(i).setPosY(375);
-			new Thread(listpokemon.get(i)).start();
-			new Thread(listRival.get(i)).start();
+			new Thread(listpokemon.get(0)).start();
+			new Thread(enemigos.get(0)).start();
 		}
 			listpokemon.get(0).drawPokemon();
 			app.fill(0);
@@ -402,8 +403,8 @@ public class Logic {
 			listpokemon.get(i).setPosX(25);
 			listpokemon.get(i).setPosY(375);
 			//Thread
-			new Thread(listpokemon.get(i)).start();
-			new Thread(listRival.get(i)).start();
+			new Thread(listpokemon.get(0)).start();
+			new Thread(listRival.get(0)).start();
 		}
 		
 			listpokemon.get(0).drawPokemon();
@@ -414,13 +415,12 @@ public class Logic {
 			app.text("vida: "+this.listpokemon.get(0).getVidaPokemon(),400,400);
 			app.text("Exp: "+this.listpokemon.get(0).getExp(),400,460);
 			if(this.listpokemon.get(0).getVidaPokemon() <= 0) {
-				this.listpokemon.get(1).drawPokemon();
 				for (int i = 0; i < listpokemon.size(); i++) {
 					if(this.listpokemon.get(0).getVidaPokemon() <= 0 && listpokemon.get(i).getVidaPokemon() <= 0) {
 						pantalla = 4;
+						new Thread(listpokemon.get(0)).stop();
+						new Thread(listRival.get(0)).stop();
 						this.listpokemon.removeAll(listpokemon);
-						new Thread(listpokemon.get(i)).stop();
-						new Thread(listRival.get(i)).stop();
 						}
 				}
 				return;
@@ -458,7 +458,7 @@ public class Logic {
 				}
 				switch(pantallaJuego) {
 				case 1:
-					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 380 && app.mouseY < 400) {
+					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 380 && app.mouseY < 420) {
 						System.out.println("velocidad Aliado: " + listpokemon.get(0).getVelocidadPokemon());
 						System.out.println("velocidad Enemigo: " + enemigos.get(0).getVelocidadPokemon());
 						System.out.println("vida Enemiga: " + this.enemigos.get(0).getVidaPokemon());
@@ -466,11 +466,11 @@ public class Logic {
 						this.listpokemon.get(0).atacar(listpokemon, enemigos);
 					}
 					//Atrapar
-					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 433 && app.mouseY < 450) {
+					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 433 && app.mouseY < 470) {
 						capturarPokemon();
 						}
 					//Huir
-					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 482 && app.mouseY < 500) {
+					if(app.mouseX > 595 && app.mouseX < 667 && app.mouseY > 482 && app.mouseY < 520) {
 						enemigos.remove();
 						int recuperarVida = this.listpokemon.get(0).getVidaTotal();
 						this.listpokemon.get(0).setVidaPokemon(recuperarVida);
@@ -537,6 +537,8 @@ public class Logic {
 			app.text("Has perdido, tu pokemon ha fallecido y te toca reiniciar el juego", 30,100);
 			app.text("reiniciar?",350,500);
 			break;
+		case 5:
+			app.image(win,0,0);
 		}
 	}
 	
@@ -654,6 +656,7 @@ public class Logic {
 			break;
 			//Opciones para cambiar pokimon y esas vainas
 		case 3:
+			app.image(pokedex,0,0);
 			misPokemones();
 			app.textSize(20);
 			app.fill(0);
@@ -662,9 +665,11 @@ public class Logic {
 			app.text("Regresar al mapa",600,50);
 			for (int i = 0; i < listpokemon.size(); i++) {
 				app.textSize(20);
-				app.text("Nombre: "+listpokemon.get(i).getNombres()+" Nivel: "+listpokemon.get(i).getNivel(),200,100+i*100);
+				app.text("Nombre: "+listpokemon.get(i).getNombres()+" Nivel: "+listpokemon.get(i).getNivel(),200,70+i*100);
 			}
 			break;
+		case 5:
+			app.image(introducciones,0,0);
 		}
 	}
 	
@@ -834,6 +839,9 @@ public class Logic {
 				}
 				
 				if(app.mouseX > 128 && app.mouseX < 681 && app.mouseY > 370 && app.mouseY < 460) {
+					
+					//Aqui lo intente guardar pero salia error, entonces preferi comentarlo...
+					//app.saveStream("./datas/nombres.txt", nombres);
 					pantallaMenu = 2;
 				}
 				break;
@@ -865,10 +873,11 @@ public class Logic {
 					choosePokemon = 3;
 				}
 			}else {
-				if(app.mouseX > 110 && app.mouseX < 705 && app.mouseY > 441 && app.mouseY < 517) {
+				if(app.mouseX > 110 && app.mouseX < 705 && app.mouseY > 441 && app.mouseY < 517 ) {
 					pokemonesRivales();
 					//validarPokedex();
 					this.pantalla = 2;
+					this.pantallaJuego = 5;
 				}
 			}
 		break;
@@ -892,6 +901,9 @@ public class Logic {
 					prueba2();
 				}
 				break;
+			case 5:
+				pantallaJuego = 0;
+				break;
 			}
 			break;
 			//pokedex
@@ -903,10 +915,20 @@ public class Logic {
 			pantallaJuego = 0;
 			pantallaMenu = 0;
 			choosePokemon = 0;
+			protagonista.setmX(0);
+			protagonista.setmY(0);
+			protagonista.setPosX(25);
+			protagonista.setPosY(25);
 			listRival.removeAll(listRival);
+			break;
+		case 5:
+			//Ganaste
+			app.exit();
 			break;
 			}
 	}
+	
+	
 	
 	//Para ordenamiento use estos metodos xd
 	public void sortList(char c) {
@@ -971,6 +993,11 @@ public class Logic {
 		this.miffyClick = app.loadImage("./images/miffyClick.jpg");
 		this.leafabbitSelect = app.loadImage("./images/leafabbitSelect.jpg");
 		this.leafabbitClick = app.loadImage("./images/leafabbitClick.jpg");
+		
+		//Las ultimas imagenes que saque
+		this.win = app.loadImage("./images/win.jpg");
+		this.pokedex = app.loadImage("./images/pokedex.jpg");
+		this.introducciones = app.loadImage("./images/Introducciones.jpg");
 	
 	}
 }
